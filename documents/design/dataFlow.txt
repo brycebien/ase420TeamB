@@ -1,0 +1,5 @@
+When score is updated by break_lines() it will call HighScore().update_score()
+This will update the score attribute and check if score is lower than highScore,
+	if it is then highScore will also update
+
+This data is then accessed by the Tetris class in order to displaty the score and high score.
