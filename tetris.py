@@ -113,6 +113,8 @@ class LockedColor:
         self.lockedColor=7
     def changeColor(self, figure):
         figure.color = self.lockedColor
+    def setLockedColor(self, color):
+        self.lockedColor = color
 
 class GameBoard():
     def __init__(self, height, width):
