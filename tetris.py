@@ -122,19 +122,13 @@ class GameBoard():
         self.score = 0
         self.state = "start"
         self.field = []
-        self.height = 0
-        self.width = 0
         self.x = 100
         self.y = 60
         self.zoom = 20
         self.figure = None
         self.colorManager = LockedColor()
-
         self.height = height
         self.width = width
-        self.field = []
-        self.score = 0
-        self.state = "start"
         for i in range(height):
             new_line = []
             for j in range(width):
