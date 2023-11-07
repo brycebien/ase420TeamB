@@ -1,6 +1,11 @@
 import pygame
 import random
 
+# Define some colors
+BLACK = (0, 0, 0)
+WHITE = (255, 255, 255)
+GRAY = (128, 128, 128)
+
 colors = [
     (0, 0, 0),
     (120, 37, 179),
@@ -9,12 +14,9 @@ colors = [
     (80, 134, 22),
     (180, 34, 22),
     (180, 34, 122),
+    GRAY
 ]
 
-# Define some colors
-BLACK = (0, 0, 0)
-WHITE = (255, 255, 255)
-GRAY = (128, 128, 128)
 
 class Tetris:
     def __init__(self, height, width):
@@ -106,7 +108,13 @@ class Tetris:
                                           self.game.y + self.game.zoom * (i + self.game.figure.y) + 1,
                                           self.game.zoom - 2, self.game.zoom - 2])
 
-class GameBoard:
+class LockedColor:
+    def __init__(self):
+        self.lockedColor=7
+    def changeColor(self, figure):
+        figure.color = self.lockedColor
+
+class GameBoard():
     def __init__(self, height, width):
         self.level = 2
         self.score = 0
@@ -118,6 +126,7 @@ class GameBoard:
         self.y = 60
         self.zoom = 20
         self.figure = None
+        self.colorManager = LockedColor()
 
         self.height = height
         self.width = width
@@ -172,6 +181,7 @@ class GameBoard:
             self.freeze()
 
     def freeze(self):
+        self.colorManager.changeColor(self.figure)
         for i in range(4):
             for j in range(4):
                 if i * 4 + j in self.figure.image():
@@ -208,7 +218,7 @@ class Figure:
         self.x = x
         self.y = y
         self.type = random.randint(0, len(self.figures) - 1)
-        self.color = random.randint(1, len(colors) - 1)
+        self.color = random.randint(1, len(colors) - 2)
         self.rotation = 0
 
     def image(self):
@@ -221,3 +231,4 @@ if __name__ == "__main__":
     pygame.init()
     game = Tetris(20, 10)
     game.run()
+
