@@ -1,8 +1,3 @@
-initialize_game()->new_figure()
-run()->new_figure()
+frozen()->colorManager.changeColor(self.figure)
 
-go_space()->freeze()
-go_down()->freeze()
-freeze()->new_figure()->self.figure=Figure(3,0)
-
-new_figure()->FrozenColor().change_color(self.figure)
+This changes the color to gray when the block is frozen
