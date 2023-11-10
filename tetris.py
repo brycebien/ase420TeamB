@@ -1,5 +1,6 @@
 import pygame
 import random
+import sound
 
 Colors = [
     (0, 0, 0),
@@ -133,6 +134,7 @@ class Move:
         tetromino.rotation = (tetromino.rotation + 1) % len(Figures[tetromino.type])
         if tetromino.intersects(board):
             tetromino.rotation = old_rotation
+        pygame.mixer.Sound.play(sound.rotate_sound)
 
     @staticmethod
     def freezeTetronimo(tetromino, board):
@@ -141,6 +143,10 @@ class Move:
                 if i * 4 + j in tetromino.get_rotation():
                     board.field[i + tetromino.shift_y][j + tetromino.shift_x] = tetromino.color
         tetromino.make_figure(3, 0)
+        pygame.mixer.Sound.play(sound.tetromino_placed_sound)
+
+        if board.break_lines() > 0:
+            pygame.mixer.Sound.play(sound.linebreak_sound)
 
 class TetrisGame:
     def __init__(self, screen, start_x, start_y, square_size, height, width):
@@ -162,9 +168,11 @@ class TetrisGame:
         fps = 25
         counter = 0
         pressing_down = False
-
+        
         self.renderer.init_board(self.board)
         self.tetromino.make_figure(3, 0)
+
+        sound.playBackgroundMusic()
 
         done = False
         while not done:
@@ -203,7 +211,6 @@ class TetrisGame:
             cleared_lines = self.board.break_lines()
             self.score += cleared_lines
         
-
             self.renderer.draw_board(self.board)
             self.renderer.draw_figure(self.tetromino)
 
@@ -217,9 +224,17 @@ class TetrisGame:
                 text_game_over1 = font1.render("Enter q to Quit", True, (255, 215, 0))
                 self.screen.blit(text_game_over, [20, 200])
                 self.screen.blit(text_game_over1, [25, 265])
+                pygame.mixer.music.stop()
+                break
 
             pygame.display.flip()
             clock.tick(fps)
+
+
+        pygame.mixer.Sound.play(sound.game_over_sound)
+
+        while(pygame.mixer.get_busy()):
+            pygame.time.wait(1)
 
         pygame.quit()
 
