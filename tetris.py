@@ -2,7 +2,11 @@ import pygame
 import random
 import sound
 
-Colors = [
+BLACK = (0, 0, 0)
+WHITE = (255, 255, 255)
+GRAY = (128, 128, 128)
+
+colors = [
     (0, 0, 0),
     (120, 37, 179),
     (100, 179, 179),
@@ -10,11 +14,9 @@ Colors = [
     (80, 134, 22),
     (180, 34, 22),
     (180, 34, 122),
+    GRAY
 ]
 
-BLACK = (0, 0, 0)
-WHITE = (255, 255, 255)
-GRAY = (128, 128, 128)
 
 Figures = (
     [[1, 5, 9, 13], [4, 5, 6, 7]],
@@ -25,6 +27,14 @@ Figures = (
     [[1, 4, 5, 6], [1, 4, 5, 9], [4, 5, 6, 9], [1, 5, 6, 9]],
 )
 
+class LockedColor:
+    def __init__(self):
+        self.lockedColor=7
+    def changeColor(self, figure):
+        figure.color = self.lockedColor
+    def setLockedColor(self, color):
+        self.lockedColor = color
+
 class Tetromino:
     def __init__(self):
         self.shift_x = 0
@@ -32,6 +42,7 @@ class Tetromino:
         self.rotation = 0
         self.type = 0
         self.color = 0
+        self.colorManager = LockedColor()
 
     def get_rotation(self):
         return Figures[self.type][self.rotation % len(Figures[self.type])]
@@ -41,7 +52,7 @@ class Tetromino:
         self.shift_y = y
         self.type = random.randint(0, len(Figures) - 1)
         self.rotation = 0
-        self.color = random.randint(1, len(Colors) - 1)
+        self.color = random.randint(1, len(colors) - 1)
 
     def intersects(self, board):
         for i in range(4):
@@ -94,14 +105,14 @@ class TetrisRenderer:
             for j in range(board.width):
                 pygame.draw.rect(self.screen, GRAY, [self.start_x + self.square_size * j, self.start_y + self.square_size * i, self.square_size, self.square_size], 1)
                 if board.field[i][j] > 0:
-                    pygame.draw.rect(self.screen, Colors[board.field[i][j]], [self.start_x + self.square_size * j + 1, self.start_y + self.square_size * i + 1, self.square_size - 2, self.square_size - 1])
+                    pygame.draw.rect(self.screen, colors[board.field[i][j]], [self.start_x + self.square_size * j + 1, self.start_y + self.square_size * i + 1, self.square_size - 2, self.square_size - 1])
 
     def draw_figure(self, tetromino):
         for i in range(4):
             for j in range(4):
                 p = i * 4 + j
                 if p in Figures[tetromino.type][tetromino.rotation]:
-                    pygame.draw.rect(self.screen, Colors[tetromino.color],
+                    pygame.draw.rect(self.screen, colors[tetromino.color],
                                      [self.start_x + self.square_size * (j + tetromino.shift_x) + 1,
                                       self.start_y + self.square_size * (i + tetromino.shift_y) + 1,
                                       self.square_size - 2, self.square_size - 2])
@@ -138,6 +149,7 @@ class Move:
 
     @staticmethod
     def freezeTetronimo(tetromino, board):
+        tetromino.colorManager.changeColor(tetromino)
         for i in range(4):
             for j in range(4):
                 if i * 4 + j in tetromino.get_rotation():
