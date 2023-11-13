@@ -45,10 +45,49 @@
         "nFiles": 1}
     },
     "bryce": {
-
+      "header" : {
+        "cloc_url"           : "github.com/AlDanial/cloc",
+        "cloc_version"       : "1.98",
+        "elapsed_seconds"    : 0.00825810432434082,
+        "n_files"            : 1,
+        "n_lines"            : 247,
+        "files_per_second"   : 121.093166267286,
+        "lines_per_second"   : 29910.0120680197},
+      ".\\tetris.py" :{
+        "blank": 40,
+        "comment": 0,
+        "code": 207,
+        "language": "Python"},
+      "SUM": {
+        "blank": 40,
+        "comment": 0,
+        "code": 207,
+        "nFiles": 1}
     },
     "andrew": {
-
+      "header" : {
+        "cloc_url"           : "github.com/AlDanial/cloc",
+        "cloc_version"       : "1.98",
+        "elapsed_seconds"    : 0.0232820510864258,
+        "n_files"            : 1,
+        "n_lines"            : 250,
+        "files_per_second"   : 42.951542211117,
+        "lines_per_second"   : 10737.8855527793},
+      ".\\sound.py" :{
+        "blank": 4,
+        "comment": 0,
+        "code": 9,
+        "language": "Python"},
+      ".\\tetris.py" :{
+        "blank": 42,
+        "comment": 0,
+        "code": 208,
+        "language": "Python"},
+      "SUM": {
+        "blank": 46,
+        "comment": 0,
+        "code": 217,
+        "nFiles": 1}
     }
   }
 }
