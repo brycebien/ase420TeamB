@@ -1,6 +1,7 @@
 import pygame
 import random
 import sound
+import textwrap
 
 BLACK = (0, 0, 0)
 WHITE = (255, 255, 255)
@@ -168,12 +169,49 @@ class TetrisGame:
         self.square_size = square_size
         self.board = Board(height, width)
         self.tetromino = Tetromino()
+        self.font1 = pygame.font.SysFont('Calibri', 65, True, False)
         self.score = 0
         self.state = "start"
         self.renderer = TetrisRenderer(screen, start_x, start_y, square_size, height, width)
 
+    def show_instructions(self):
+
+        # Fill the screen with white
+        self.screen.fill(WHITE)
+        pygame.display.set_caption("Instructions")
+        # Display instructions
+
+        instructions = ["Use the left and right arrow keys to move the tetromino.", "Press the up arrow key to rotate the tetromino.", "Press the spacebar to drop the tetromino.", "Score points by clearing lines by filling in all the squares in a row.", "Points are based on how many lines are cleared at a time", "Press the \"Q\" key to quit the game."]
+
+        font1 = pygame.font.SysFont('trebuchetms', 65, True, False)
+        text1 = font1.render("Tetris", True, (0, 255, 0))
+        self.screen.blit(text1, [10, 0])
+        font = pygame.font.SysFont('trebuchetms', 18, True, False)
+
+        text_y_coord = 80
+
+        for text in instructions:
+            wrapped_text = textwrap.wrap(text, width=40)
+
+            for line in wrapped_text:
+                display_text = font.render(line, True, BLACK)
+                self.screen.blit(display_text, [20, text_y_coord])
+                text_y_coord += 35
+
+        continue_text = font.render("Press \"C\" to continue.", True, BLACK)
+        self.screen.blit(continue_text, [20, text_y_coord + 60])
+
+        terminator = True
+        while terminator:
+            for event in pygame.event.get():
+                if event.type == pygame.KEYDOWN:
+                    if event.key == pygame.K_c:
+                        terminator = False
+                        break
+            pygame.display.flip()
+        
     def run(self):
-        pygame.init()
+    
         pygame.display.set_caption("Tetris")
         clock = pygame.time.Clock()
 
@@ -231,9 +269,8 @@ class TetrisGame:
             self.screen.blit(text, [0, 0])
 
             if self.state == "gameover":
-                font1 = pygame.font.SysFont('Calibri', 65, True, False)
-                text_game_over = font1.render("Game Over", True, (255, 125, 0))
-                text_game_over1 = font1.render("Enter q to Quit", True, (255, 215, 0))
+                text_game_over = self.font1.render("Game Over", True, (255, 125, 0))
+                text_game_over1 = self.font1.render("Enter q to Quit", True, (255, 215, 0))
                 self.screen.blit(text_game_over, [20, 200])
                 self.screen.blit(text_game_over1, [25, 265])
                 pygame.mixer.music.stop()
@@ -251,6 +288,7 @@ class TetrisGame:
         pygame.quit()
 
 if __name__ == "__main__":
+    pygame.init()
     size = (400, 500)
     start_x = 100
     start_y = 60
@@ -259,4 +297,5 @@ if __name__ == "__main__":
     width = 10
     screen = pygame.display.set_mode(size)
     game = TetrisGame(screen, start_x, start_y, square_size, height, width)
+    game.show_instructions()
     game.run()
