@@ -67,11 +67,23 @@ class Tetromino:
                         return True
         return False
 
+class EventManager:
+    def __init__(self):
+        self._listeners = []
+    
+    def subscribe(self, listener):
+        self._listeners.append(listener)
+
+    def notify(self, lines):
+        for listener in self._listeners:
+            listener.update(lines)
+
 class Board:
     def __init__(self, height, width):
         self.height = height
         self.width = width
         self.field = [[0] * width for _ in range(height)]
+        self.line_manager=EventManager()
 
     def break_lines(self):
         lines_cleared = 0
@@ -85,9 +97,8 @@ class Board:
             del self.field[row]
             self.field.insert(0, [0] * self.width)
             lines_cleared += 1
-
+        self.line_manager.notify(lines_cleared)
         return lines_cleared
-
 class TetrisRenderer:
     def __init__(self, screen, start_x, start_y, square_size, board_height, board_width):
         self.screen = screen
@@ -188,7 +199,11 @@ class TetrisGame:
         self.state = "start"
         self.renderer = TetrisRenderer(screen, start_x, start_y, square_size, height, width)
         self.scoreManager = HighScore()
+        self.board.line_manager.subscribe(self)
 
+    def update(self, lines):
+        self.scoreManager.update_score(lines)
+        
     def run(self):
         pygame.init()
         pygame.display.set_caption("Tetris")
@@ -237,8 +252,8 @@ class TetrisGame:
                 if event.type == pygame.KEYUP and event.key == pygame.K_DOWN:
                     pressing_down = False
 
-            cleared_lines = self.board.break_lines()
-            self.scoreManager.update_score(cleared_lines)
+            #cleared_lines = self.board.break_lines()
+            # self.scoreManager.update_score(cleared_lines)
             #self.score += cleared_lines
         
             self.renderer.draw_board(self.board)
