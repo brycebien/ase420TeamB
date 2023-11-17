@@ -53,7 +53,7 @@ class Tetromino:
         self.shift_y = y
         self.type = random.randint(0, len(Figures) - 1)
         self.rotation = 0
-        self.color = random.randint(1, len(colors) - 1)
+        self.color = random.randint(1, len(colors) - 2)
 
     def intersects(self, board):
         for i in range(4):
