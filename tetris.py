@@ -172,10 +172,10 @@ class Move:
         if board.break_lines() > 0:
             pygame.mixer.Sound.play(sound.linebreak_sound)
 
-
 class HighScore:
     def __init__(self):
         self.score = 0
+        #TODO: write hs to file when it is > 0/>old hs -- grab hs from file
         self.high_score = 0
 
     def _check_highscore(self):
@@ -186,8 +186,6 @@ class HighScore:
         self.score += amnt
         self._check_highscore()
     
-        
-
 class TetrisGame:
     def __init__(self, screen, start_x, start_y, square_size, height, width):
         self.screen = screen
@@ -251,10 +249,6 @@ class TetrisGame:
 
                 if event.type == pygame.KEYUP and event.key == pygame.K_DOWN:
                     pressing_down = False
-
-            #cleared_lines = self.board.break_lines()
-            # self.scoreManager.update_score(cleared_lines)
-            #self.score += cleared_lines
         
             self.renderer.draw_board(self.board)
             self.renderer.draw_figure(self.tetromino)
