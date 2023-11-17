@@ -161,6 +161,22 @@ class Move:
         if board.break_lines() > 0:
             pygame.mixer.Sound.play(sound.linebreak_sound)
 
+
+class HighScore:
+    def __init__(self):
+        self.score = 0
+        self.high_score = 0
+
+    def _check_highscore(self):
+        if self.score > self.high_score:
+            self.high_score = self.score
+
+    def update_score(self, amnt):
+        self.score += amnt
+        self._check_highscore()
+    
+        
+
 class TetrisGame:
     def __init__(self, screen, start_x, start_y, square_size, height, width):
         self.screen = screen
@@ -169,9 +185,9 @@ class TetrisGame:
         self.square_size = square_size
         self.board = Board(height, width)
         self.tetromino = Tetromino()
-        self.score = 0
         self.state = "start"
         self.renderer = TetrisRenderer(screen, start_x, start_y, square_size, height, width)
+        self.scoreManager = HighScore()
 
     def run(self):
         pygame.init()
@@ -222,14 +238,17 @@ class TetrisGame:
                     pressing_down = False
 
             cleared_lines = self.board.break_lines()
-            self.score += cleared_lines
+            self.scoreManager.update_score(cleared_lines)
+            #self.score += cleared_lines
         
             self.renderer.draw_board(self.board)
             self.renderer.draw_figure(self.tetromino)
 
             font = pygame.font.SysFont('Calibri', 25, True, False)
-            text = font.render("Score: " + str(self.score), True, BLACK)
-            self.screen.blit(text, [0, 0])
+            score = font.render("Score: " + str(self.scoreManager.score), True, BLACK)
+            high_score = font.render("High Score: " + str(self.scoreManager.high_score), True, BLACK)
+            self.screen.blit(score, [0, 0])
+            self.screen.blit(high_score, [0, 25])
 
             if self.state == "gameover":
                 font1 = pygame.font.SysFont('Calibri', 65, True, False)
