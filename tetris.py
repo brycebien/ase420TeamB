@@ -1,3 +1,4 @@
+import os
 import pygame
 import random
 import sound
@@ -26,6 +27,7 @@ Figures = (
     [[1, 2, 5, 9], [0, 4, 5, 6], [1, 5, 9, 8], [4, 5, 6, 10]],
     [[1, 2, 6, 10], [5, 6, 7, 9], [2, 6, 10, 11], [3, 5, 6, 7]],
     [[1, 4, 5, 6], [1, 4, 5, 9], [4, 5, 6, 9], [1, 5, 6, 9]],
+    [[1, 2, 5, 6]]
 )
 
 class LockedColor:
@@ -53,7 +55,7 @@ class Tetromino:
         self.shift_y = y
         self.type = random.randint(0, len(Figures) - 1)
         self.rotation = 0
-        self.color = random.randint(1, len(colors) - 1)
+        self.color = random.randint(1, len(colors) - 2)
 
     def intersects(self, board):
         for i in range(4):
@@ -67,11 +69,23 @@ class Tetromino:
                         return True
         return False
 
+class EventManager:
+    def __init__(self):
+        self._listeners = []
+    
+    def subscribe(self, listener):
+        self._listeners.append(listener)
+
+    def notify(self, lines):
+        for listener in self._listeners:
+            listener.update(lines)
+
 class Board:
     def __init__(self, height, width):
         self.height = height
         self.width = width
         self.field = [[0] * width for _ in range(height)]
+        self.line_manager=EventManager()
 
     def break_lines(self):
         lines_cleared = 0
@@ -85,9 +99,8 @@ class Board:
             del self.field[row]
             self.field.insert(0, [0] * self.width)
             lines_cleared += 1
-
+        self.line_manager.notify(lines_cleared)
         return lines_cleared
-
 class TetrisRenderer:
     def __init__(self, screen, start_x, start_y, square_size, board_height, board_width):
         self.screen = screen
@@ -161,6 +174,29 @@ class Move:
         if board.break_lines() > 0:
             pygame.mixer.Sound.play(sound.linebreak_sound)
 
+class HighScore:
+    def __init__(self):
+        self.score = 0
+        #TODO: write hs to file when it is > 0/>old hs -- grab hs from file
+        if os.path.exists('highscore.txt'):
+            with open ('highscore.txt', 'r') as file:
+                self.high_score = int(file.read())
+        else:
+            with open('highscore.txt', 'w') as file:
+                file.write('0')
+                self.high_score = 0
+
+
+    def _check_highscore(self):
+        if self.score > self.high_score:
+            self.high_score = self.score
+            with open ('highscore.txt', 'w') as file:
+                file.write(str(self.high_score))
+
+    def update_score(self, amnt):
+        self.score += amnt
+        self._check_highscore()
+    
 class TetrisGame:
     def __init__(self, screen, start_x, start_y, square_size, height, width):
         self.screen = screen
@@ -173,6 +209,8 @@ class TetrisGame:
         self.score = 0
         self.state = "start"
         self.renderer = TetrisRenderer(screen, start_x, start_y, square_size, height, width)
+        self.scoreManager = HighScore()
+        self.board.line_manager.subscribe(self)
 
     def show_instructions(self):
 
@@ -209,6 +247,9 @@ class TetrisGame:
                         terminator = False
                         break
             pygame.display.flip()
+            
+    def update(self, lines):
+        self.scoreManager.update_score(lines)
         
     def run(self):
     
@@ -257,16 +298,15 @@ class TetrisGame:
 
                 if event.type == pygame.KEYUP and event.key == pygame.K_DOWN:
                     pressing_down = False
-
-            cleared_lines = self.board.break_lines()
-            self.score += cleared_lines
         
             self.renderer.draw_board(self.board)
             self.renderer.draw_figure(self.tetromino)
 
             font = pygame.font.SysFont('Calibri', 25, True, False)
-            text = font.render("Score: " + str(self.score), True, BLACK)
-            self.screen.blit(text, [0, 0])
+            score = font.render("Score: " + str(self.scoreManager.score), True, BLACK)
+            high_score = font.render("High Score: " + str(self.scoreManager.high_score), True, BLACK)
+            self.screen.blit(score, [0, 0])
+            self.screen.blit(high_score, [0, 25])
 
             if self.state == "gameover":
                 text_game_over = self.font1.render("Game Over", True, (255, 125, 0))
