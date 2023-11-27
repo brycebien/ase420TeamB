@@ -89,5 +89,92 @@
         "code": 217,
         "nFiles": 1}
     }
+  },
+  "11-27-23": {
+    "main": {
+      "header" : {
+        "cloc_url"           : "github.com/AlDanial/cloc",
+        "cloc_version"       : "1.98",
+        "elapsed_seconds"    : 0.0141830444335938,
+        "n_files"            : 1,
+        "files_per_second"   : 70.5067240451856,
+        "lines_per_second"   : 24042.7928994083
+      },
+    ".\\tetris.py" :{
+        "blank": 59,
+        "comment": 3,
+        "code": 279,
+        "language": "Python"
+      },
+      ".\\sound.py" :{
+        "blank": 4,
+        "comment": 0,
+        "code": 9,
+        "language": "Python"
+      },
+      "SUM": {
+        "blank": 63,
+        "comment": 3,
+        "code": 288,
+        "nFiles": 2
+      }
+    },
+    "andrew": {
+      "header" : {
+        "cloc_url"           : "github.com/AlDanial/cloc",
+        "cloc_version"       : "1.98",
+        "elapsed_seconds"    : 0.0141830444335938,
+        "n_files"            : 1,
+        "files_per_second"   : 70.5067240451856,
+        "lines_per_second"   : 24042.7928994083
+      },
+      ".\\tetris.py" :{
+        "blank": 59,
+        "comment": 3,
+        "code": 279,
+        "language": "Python"
+      },
+      ".\\sound.py" :{
+        "blank": 4,
+        "comment": 0,
+        "code": 9,
+        "language": "Python"
+      },
+      "SUM": {
+        "blank": 63,
+        "comment": 3,
+        "code": 288,
+        "nFiles": 2
+      }
+    },
+    "bryce": {
+      "header" : {
+        "cloc_url"           : "github.com/AlDanial/cloc",
+        "cloc_version"       : "1.98",
+        "elapsed_seconds"    : 0.0136198997497559,
+        "n_files"            : 1,
+        "n_lines"            : 301,
+        "files_per_second"   : 73.4219794839478,
+        "lines_per_second"   : 22100.0158246683
+      },
+      ".\\tetris.py" :{
+        "blank": 49,
+        "comment": 1,
+        "code": 251,
+        "language": "Python"
+      },
+      ".\\sound.py" :{
+        "blank": 4,
+        "comment": 0,
+        "code": 9,
+        "language": "Python"
+      },
+      "SUM": {
+        "blank": 53,
+        "comment": 1,
+        "code": 260,
+        "nFiles": 2
+      }
+    }
   }
 }
