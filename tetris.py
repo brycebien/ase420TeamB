@@ -38,6 +38,23 @@ class LockedColor:
     def setLockedColor(self, color):
         self.lockedColor = color
 
+class DetermineNextShape:
+    def __init__(self):
+        self.next_shape = None
+        self.current_shape = None
+        self.has_been_set = False
+    
+    def determineNext(self):
+        if not self.has_been_set:
+            self.current_shape = random.randint(0, len(Figures) - 1)
+            self.next_shape = random.randint(0, len(Figures) - 1)
+            self.has_been_set = True
+            return self.current_shape
+        else:
+            self.current_shape = self.next_shape
+            self.next_shape = random.randint(0, len(Figures) - 1)
+            return self.current_shape
+
 class Tetromino:
     def __init__(self):
         self.shift_x = 0
@@ -46,6 +63,7 @@ class Tetromino:
         self.type = 0
         self.color = 0
         self.colorManager = LockedColor()
+        self.shapeManager = DetermineNextShape()
 
     def get_rotation(self):
         return Figures[self.type][self.rotation % len(Figures[self.type])]
@@ -53,7 +71,7 @@ class Tetromino:
     def make_figure(self, x, y):
         self.shift_x = x
         self.shift_y = y
-        self.type = random.randint(0, len(Figures) - 1)
+        self.type = self.shapeManager.determineNext()
         self.rotation = 0
         self.color = random.randint(1, len(colors) - 2)
 
@@ -131,6 +149,17 @@ class TetrisRenderer:
                                       self.start_y + self.square_size * (i + tetromino.shift_y) + 1,
                                       self.square_size - 2, self.square_size - 2])
 
+    def draw_next(self, tetromino):
+        figure = Figures[tetromino][0]
+        for i in range(4):
+            for j in range(4):
+                p = i * 4 + j
+                if p in Figures[tetromino][0]:
+                    pygame.draw.rect(self.screen, colors[0],
+                                     [self.start_x + self.square_size * (j + 10.5) + 1,
+                                      self.start_y + self.square_size * (i - 1) + 1,
+                                      self.square_size - 2, self.square_size - 2])
+
 class Move:
     @staticmethod
     def go_space(tetromino, board):
@@ -177,7 +206,6 @@ class Move:
 class HighScore:
     def __init__(self):
         self.score = 0
-        #TODO: write hs to file when it is > 0/>old hs -- grab hs from file
         if os.path.exists('highscore.txt'):
             with open ('highscore.txt', 'r') as file:
                 self.high_score = int(file.read())
@@ -301,10 +329,13 @@ class TetrisGame:
         
             self.renderer.draw_board(self.board)
             self.renderer.draw_figure(self.tetromino)
+            self.renderer.draw_next(self.tetromino.shapeManager.next_shape)
 
             font = pygame.font.SysFont('Calibri', 25, True, False)
+            next_piece = font.render("Next Piece:", True, BLACK)
             score = font.render("Score: " + str(self.scoreManager.score), True, BLACK)
             high_score = font.render("High Score: " + str(self.scoreManager.high_score), True, BLACK)
+            self.screen.blit(next_piece, [275,3])
             self.screen.blit(score, [0, 0])
             self.screen.blit(high_score, [0, 25])
 
