@@ -45,7 +45,6 @@ class DetermineNextShape:
         self.has_been_set = False
     
     def determineNext(self):
-        print(self.next_shape)
         if not self.has_been_set:
             self.current_shape = random.randint(0, len(Figures) - 1)
             self.next_shape = random.randint(0, len(Figures) - 1)
@@ -55,7 +54,6 @@ class DetermineNextShape:
             self.current_shape = self.next_shape
             self.next_shape = random.randint(0, len(Figures) - 1)
             return self.current_shape
-        #current bug -- only one shape shows
 
 class Tetromino:
     def __init__(self):
