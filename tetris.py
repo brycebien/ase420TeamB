@@ -38,6 +38,25 @@ class LockedColor:
     def setLockedColor(self, color):
         self.lockedColor = color
 
+class DetermineNextShape:
+    def __init__(self):
+        self.next_shape = None
+        self.current_shape = None
+        self.has_been_set = False
+    
+    def determineNext(self):
+        print(self.next_shape)
+        if not self.has_been_set:
+            self.current_shape = random.randint(0, len(Figures) - 1)
+            self.next_shape = random.randint(0, len(Figures) - 1)
+            self.has_been_set = True
+            return self.current_shape
+        else:
+            self.current_shape = self.next_shape
+            self.next_shape = random.randint(0, len(Figures) - 1)
+            return self.current_shape
+        #current bug -- only one shape shows
+
 class Tetromino:
     def __init__(self):
         self.shift_x = 0
@@ -46,6 +65,7 @@ class Tetromino:
         self.type = 0
         self.color = 0
         self.colorManager = LockedColor()
+        self.shapeManager = DetermineNextShape()
 
     def get_rotation(self):
         return Figures[self.type][self.rotation % len(Figures[self.type])]
@@ -53,7 +73,7 @@ class Tetromino:
     def make_figure(self, x, y):
         self.shift_x = x
         self.shift_y = y
-        self.type = random.randint(0, len(Figures) - 1)
+        self.type = self.shapeManager.determineNext()
         self.rotation = 0
         self.color = random.randint(1, len(colors) - 2)
 
