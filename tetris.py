@@ -3,21 +3,42 @@ import pygame
 import random
 import sound
 import textwrap
+from enum import Enum
 
-BLACK = (0, 0, 0)
-WHITE = (255, 255, 255)
-GRAY = (128, 128, 128)
+class BasicColors(Enum):
+    BLACK = (0, 0, 0)
+    WHITE = (255, 255, 255)
+    GRAY = (128, 128, 128)
 
-colors = [
-    (0, 0, 0),
-    (120, 37, 179),
-    (100, 179, 179),
-    (80, 34, 22),
-    (80, 134, 22),
-    (180, 34, 22),
-    (180, 34, 122),
-    GRAY
-]
+class Color:
+    color_themes = [
+        [
+            (0, 0, 0),
+            (120, 37, 179),
+            (100, 179, 179),
+            (80, 34, 22),
+            (80, 134, 22),
+            (180, 34, 22),
+            (180, 34, 122),
+        ],
+        [
+            (0, 0, 0),
+            (255, 0, 0),
+            (0, 255, 0),
+            (0, 0, 255),
+            (255, 255, 0),
+            (0, 255, 255),
+            (255, 0, 255),
+
+        ],
+    ]
+
+    def __init__(self):
+        self.color_theme = self.color_themes[0]
+
+    def pickThemeScreen(self):
+        themeChoice = int(input("Pick a theme"))
+        self.theme = self.color_themes[themeChoice]
 
 
 Figures = (
@@ -62,6 +83,7 @@ class Tetromino:
         self.rotation = 0
         self.type = 0
         self.color = 0
+        self.colors = Color().color_theme
         self.colorManager = LockedColor()
         self.shapeManager = DetermineNextShape()
 
@@ -73,7 +95,7 @@ class Tetromino:
         self.shift_y = y
         self.type = self.shapeManager.determineNext()
         self.rotation = 0
-        self.color = random.randint(1, len(colors) - 2)
+        self.color = random.randint(1, len(self.colors) - 2)
 
     def intersects(self, board):
         for i in range(4):
@@ -119,7 +141,10 @@ class Board:
             lines_cleared += 1
         self.line_manager.notify(lines_cleared)
         return lines_cleared
+    
 class TetrisRenderer:
+    colors = Color().color_theme
+
     def __init__(self, screen, start_x, start_y, square_size, board_height, board_width):
         self.screen = screen
         self.start_x = start_x
@@ -132,19 +157,19 @@ class TetrisRenderer:
         board.field = [[0] * board.width for i in range(board.height)]
 
     def draw_board(self, board):
-        self.screen.fill(WHITE)
+        self.screen.fill(BasicColors.WHITE.value)
         for i in range(board.height):
             for j in range(board.width):
-                pygame.draw.rect(self.screen, GRAY, [self.start_x + self.square_size * j, self.start_y + self.square_size * i, self.square_size, self.square_size], 1)
+                pygame.draw.rect(self.screen, BasicColors.GRAY.value, [self.start_x + self.square_size * j, self.start_y + self.square_size * i, self.square_size, self.square_size], 1)
                 if board.field[i][j] > 0:
-                    pygame.draw.rect(self.screen, colors[board.field[i][j]], [self.start_x + self.square_size * j + 1, self.start_y + self.square_size * i + 1, self.square_size - 2, self.square_size - 1])
+                    pygame.draw.rect(self.screen, self.colors[board.field[i][j]], [self.start_x + self.square_size * j + 1, self.start_y + self.square_size * i + 1, self.square_size - 2, self.square_size - 1])
 
     def draw_figure(self, tetromino):
         for i in range(4):
             for j in range(4):
                 p = i * 4 + j
                 if p in Figures[tetromino.type][tetromino.rotation]:
-                    pygame.draw.rect(self.screen, colors[tetromino.color],
+                    pygame.draw.rect(self.screen, self.colors[tetromino.color],
                                      [self.start_x + self.square_size * (j + tetromino.shift_x) + 1,
                                       self.start_y + self.square_size * (i + tetromino.shift_y) + 1,
                                       self.square_size - 2, self.square_size - 2])
@@ -155,7 +180,7 @@ class TetrisRenderer:
             for j in range(4):
                 p = i * 4 + j
                 if p in Figures[tetromino][0]:
-                    pygame.draw.rect(self.screen, colors[0],
+                    pygame.draw.rect(self.screen, self.colors[0],
                                      [self.start_x + self.square_size * (j + 10.5) + 1,
                                       self.start_y + self.square_size * (i - 1) + 1,
                                       self.square_size - 2, self.square_size - 2])
@@ -243,7 +268,7 @@ class TetrisGame:
     def show_instructions(self):
 
         # Fill the screen with white
-        self.screen.fill(WHITE)
+        self.screen.fill(BasicColors.WHITE.value)
         pygame.display.set_caption("Instructions")
         # Display instructions
 
@@ -260,11 +285,11 @@ class TetrisGame:
             wrapped_text = textwrap.wrap(text, width=40)
 
             for line in wrapped_text:
-                display_text = font.render(line, True, BLACK)
+                display_text = font.render(line, True, BasicColors.BLACK.value)
                 self.screen.blit(display_text, [20, text_y_coord])
                 text_y_coord += 35
 
-        continue_text = font.render("Press \"C\" to continue.", True, BLACK)
+        continue_text = font.render("Press \"C\" to continue.", True, BasicColors.BLACK.value)
         self.screen.blit(continue_text, [20, text_y_coord + 60])
 
         terminator = True
@@ -332,9 +357,9 @@ class TetrisGame:
             self.renderer.draw_next(self.tetromino.shapeManager.next_shape)
 
             font = pygame.font.SysFont('Calibri', 25, True, False)
-            next_piece = font.render("Next Piece:", True, BLACK)
-            score = font.render("Score: " + str(self.scoreManager.score), True, BLACK)
-            high_score = font.render("High Score: " + str(self.scoreManager.high_score), True, BLACK)
+            next_piece = font.render("Next Piece:", True, BasicColors.BLACK.value)
+            score = font.render("Score: " + str(self.scoreManager.score), True, BasicColors.BLACK.value)
+            high_score = font.render("High Score: " + str(self.scoreManager.high_score), True, BasicColors.BLACK.value)
             self.screen.blit(next_piece, [275,3])
             self.screen.blit(score, [0, 0])
             self.screen.blit(high_score, [0, 25])
