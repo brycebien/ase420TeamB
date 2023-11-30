@@ -3,32 +3,11 @@ import pygame
 import random
 import sound
 import textwrap
-
-BLACK = (0, 0, 0)
-WHITE = (255, 255, 255)
-GRAY = (128, 128, 128)
-
-colors = [
-    (0, 0, 0),
-    (120, 37, 179),
-    (100, 179, 179),
-    (80, 34, 22),
-    (80, 134, 22),
-    (180, 34, 22),
-    (180, 34, 122),
-    GRAY
-]
-
-
-Figures = (
-    [[1, 5, 9, 13], [4, 5, 6, 7]],
-    [[4, 5, 9, 10], [2, 6, 5, 9]],
-    [[6, 7, 9, 10], [1, 5, 6, 10]],
-    [[1, 2, 5, 9], [0, 4, 5, 6], [1, 5, 9, 8], [4, 5, 6, 10]],
-    [[1, 2, 6, 10], [5, 6, 7, 9], [2, 6, 10, 11], [3, 5, 6, 7]],
-    [[1, 4, 5, 6], [1, 4, 5, 9], [4, 5, 6, 9], [1, 5, 6, 9]],
-    [[1, 2, 5, 6]]
-)
+from theme_selector import ThemeSelector
+from colors import BasicColors
+from tetris_renderer import TetrisRenderer
+from figures import Figures
+from themes import color_themes
 
 class LockedColor:
     def __init__(self):
@@ -73,7 +52,7 @@ class Tetromino:
         self.shift_y = y
         self.type = self.shapeManager.determineNext()
         self.rotation = 0
-        self.color = random.randint(1, len(colors) - 2)
+        self.color = random.randint(1, len(ThemeSelector.getInstance().color_theme) - 2)
 
     def intersects(self, board):
         for i in range(4):
@@ -119,46 +98,7 @@ class Board:
             lines_cleared += 1
         self.line_manager.notify(lines_cleared)
         return lines_cleared
-class TetrisRenderer:
-    def __init__(self, screen, start_x, start_y, square_size, board_height, board_width):
-        self.screen = screen
-        self.start_x = start_x
-        self.start_y = start_y
-        self.square_size = square_size
-        self.board_height = board_height
-        self.board_width = board_width
-
-    def init_board(self, board):
-        board.field = [[0] * board.width for i in range(board.height)]
-
-    def draw_board(self, board):
-        self.screen.fill(WHITE)
-        for i in range(board.height):
-            for j in range(board.width):
-                pygame.draw.rect(self.screen, GRAY, [self.start_x + self.square_size * j, self.start_y + self.square_size * i, self.square_size, self.square_size], 1)
-                if board.field[i][j] > 0:
-                    pygame.draw.rect(self.screen, colors[board.field[i][j]], [self.start_x + self.square_size * j + 1, self.start_y + self.square_size * i + 1, self.square_size - 2, self.square_size - 1])
-
-    def draw_figure(self, tetromino):
-        for i in range(4):
-            for j in range(4):
-                p = i * 4 + j
-                if p in Figures[tetromino.type][tetromino.rotation]:
-                    pygame.draw.rect(self.screen, colors[tetromino.color],
-                                     [self.start_x + self.square_size * (j + tetromino.shift_x) + 1,
-                                      self.start_y + self.square_size * (i + tetromino.shift_y) + 1,
-                                      self.square_size - 2, self.square_size - 2])
-
-    def draw_next(self, tetromino):
-        figure = Figures[tetromino][0]
-        for i in range(4):
-            for j in range(4):
-                p = i * 4 + j
-                if p in Figures[tetromino][0]:
-                    pygame.draw.rect(self.screen, colors[0],
-                                     [self.start_x + self.square_size * (j + 10.5) + 1,
-                                      self.start_y + self.square_size * (i - 1) + 1,
-                                      self.square_size - 2, self.square_size - 2])
+    
 
 class Move:
     @staticmethod
@@ -233,19 +173,16 @@ class TetrisGame:
         self.square_size = square_size
         self.board = Board(height, width)
         self.tetromino = Tetromino()
-        self.font1 = pygame.font.SysFont('Calibri', 65, True, False)
         self.score = 0
         self.state = "start"
         self.renderer = TetrisRenderer(screen, start_x, start_y, square_size, height, width)
         self.scoreManager = HighScore()
         self.board.line_manager.subscribe(self)
+        self.font1 = pygame.font.SysFont('trebuchetms', 65, True, False)
 
     def show_instructions(self):
-
-        # Fill the screen with white
-        self.screen.fill(WHITE)
+        self.screen.fill(BasicColors.WHITE.value)
         pygame.display.set_caption("Instructions")
-        # Display instructions
 
         instructions = ["Use the left and right arrow keys to move the tetromino.", "Press the up arrow key to rotate the tetromino.", "Press the spacebar to drop the tetromino.", "Score points by clearing lines by filling in all the squares in a row.", "Points are based on how many lines are cleared at a time", "Press the \"Q\" key to quit the game."]
 
@@ -260,11 +197,11 @@ class TetrisGame:
             wrapped_text = textwrap.wrap(text, width=40)
 
             for line in wrapped_text:
-                display_text = font.render(line, True, BLACK)
+                display_text = font.render(line, True, BasicColors.BLACK.value)
                 self.screen.blit(display_text, [20, text_y_coord])
                 text_y_coord += 35
 
-        continue_text = font.render("Press \"C\" to continue.", True, BLACK)
+        continue_text = font.render("Press \"C\" to continue.", True, BasicColors.BLACK.value)
         self.screen.blit(continue_text, [20, text_y_coord + 60])
 
         terminator = True
@@ -275,6 +212,77 @@ class TetrisGame:
                         terminator = False
                         break
             pygame.display.flip()
+
+    def showThemePicker(self):
+        BUTTON_WIDTH, BUTTON_HEIGHT = 150, 75
+        BUTTON_MARGIN = 15
+        BUTTON_COLOR = (0, 128, 255)
+        BUTTON_TEXT_COLOR = (255, 255, 255)
+        THEME_BUTTONS = ["Classic", "Forest", "Pastel", "Vibrant"]
+        WIDTH, HEIGHT = pygame.display.get_surface().get_size()
+
+        CLASSIC = color_themes[0]
+        FOREST = color_themes[1]
+        PASTEL = color_themes[2]
+        VIBRANT = color_themes[3]
+
+        pygame.display.set_caption("Theme Selection")
+        font = pygame.font.SysFont('trebuchetms', 36, True, False)
+
+        def draw_color_previews(theme):
+            for i in range(6):
+                pygame.draw.rect(
+                    screen,
+                    theme[i],
+                    (
+                        WIDTH // 2 - 3 * BUTTON_WIDTH // 4 + i * (BUTTON_WIDTH // 6),
+                        HEIGHT // 2 + BUTTON_HEIGHT + BUTTON_MARGIN,
+                        BUTTON_WIDTH // 6,
+                        BUTTON_HEIGHT,
+                    ),
+                )
+
+        theme_buttons = []
+        for i, theme in enumerate(THEME_BUTTONS):
+            button_rect = pygame.Rect(
+                WIDTH // 2 - BUTTON_WIDTH // 2,
+                i * (BUTTON_HEIGHT + BUTTON_MARGIN) + BUTTON_MARGIN,
+                BUTTON_WIDTH,
+                BUTTON_HEIGHT,
+            )
+            theme_buttons.append((theme, button_rect))
+
+        terminator = True
+        while terminator:
+            for event in pygame.event.get():
+                if event.type == pygame.MOUSEBUTTONDOWN:
+                    x, y = event.pos
+                    for theme, button_rect in theme_buttons:
+                        if button_rect.collidepoint(x, y):
+                            ThemeSelector.getInstance().set_theme(theme)
+                            terminator = False
+
+            screen.fill((255, 255, 255))
+            for theme, button_rect in theme_buttons:
+                pygame.draw.rect(screen, BUTTON_COLOR, button_rect)
+                button_text = font.render(theme, True, BUTTON_TEXT_COLOR)
+                text_rect = button_text.get_rect(center=button_rect.center)
+                screen.blit(button_text, text_rect)
+
+            x, y = pygame.mouse.get_pos()
+            for theme, button_rect in theme_buttons:
+                if button_rect.collidepoint(x, y):
+                    if theme == "Classic":
+                        draw_color_previews(CLASSIC)
+                    elif theme == "Forest":
+                        draw_color_previews(FOREST)
+                    elif theme == "Vibrant":
+                        draw_color_previews(VIBRANT)
+                    elif theme == "Pastel":
+                        draw_color_previews(PASTEL)
+
+            pygame.display.flip()
+            
             
     def update(self, lines):
         self.scoreManager.update_score(lines)
@@ -332,9 +340,9 @@ class TetrisGame:
             self.renderer.draw_next(self.tetromino.shapeManager.next_shape)
 
             font = pygame.font.SysFont('Calibri', 25, True, False)
-            next_piece = font.render("Next Piece:", True, BLACK)
-            score = font.render("Score: " + str(self.scoreManager.score), True, BLACK)
-            high_score = font.render("High Score: " + str(self.scoreManager.high_score), True, BLACK)
+            next_piece = font.render("Next Piece:", True, BasicColors.BLACK.value)
+            score = font.render("Score: " + str(self.scoreManager.score), True, BasicColors.BLACK.value)
+            high_score = font.render("High Score: " + str(self.scoreManager.high_score), True, BasicColors.BLACK.value)
             self.screen.blit(next_piece, [275,3])
             self.screen.blit(score, [0, 0])
             self.screen.blit(high_score, [0, 25])
@@ -369,4 +377,5 @@ if __name__ == "__main__":
     screen = pygame.display.set_mode(size)
     game = TetrisGame(screen, start_x, start_y, square_size, height, width)
     game.show_instructions()
+    game.showThemePicker()
     game.run()
