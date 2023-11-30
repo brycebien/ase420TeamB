@@ -215,6 +215,11 @@ class TetrisGame:
 
     def showThemePicker(self):
 
+        a = ThemeSelector.getInstance()
+        b = ThemeSelector.getInstance()
+
+        print(a is b)
+
         theme_selector = ThemeSelector.getInstance()
         
         BUTTON_WIDTH, BUTTON_HEIGHT = 150, 75
@@ -262,7 +267,7 @@ class TetrisGame:
                     x, y = event.pos
                     for theme, button_rect in theme_buttons:
                         if button_rect.collidepoint(x, y):
-                            theme_selector.set_theme(theme)
+                            ThemeSelector.getInstance().set_theme(theme)
                             terminator = False
 
             screen.fill((255, 255, 255))
@@ -272,7 +277,6 @@ class TetrisGame:
                 text_rect = button_text.get_rect(center=button_rect.center)
                 screen.blit(button_text, text_rect)
 
-            # Check if the mouse is over a button and draw color previews accordingly
             x, y = pygame.mouse.get_pos()
             for theme, button_rect in theme_buttons:
                 if button_rect.collidepoint(x, y):
