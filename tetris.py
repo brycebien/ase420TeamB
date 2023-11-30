@@ -214,14 +214,6 @@ class TetrisGame:
             pygame.display.flip()
 
     def showThemePicker(self):
-
-        a = ThemeSelector.getInstance()
-        b = ThemeSelector.getInstance()
-
-        print(a is b)
-
-        theme_selector = ThemeSelector.getInstance()
-        
         BUTTON_WIDTH, BUTTON_HEIGHT = 150, 75
         BUTTON_MARGIN = 15
         BUTTON_COLOR = (0, 128, 255)
