@@ -1,5 +1,12 @@
-Code Smell: unnecessary Code
+Code Smell: unnecessary code (Bryce)
     Detected: 12/2/2023
     Lines: 158-162
     Link to Github with Code Smell: https://github.com/brycebien/ase420TeamB/blob/ec9822580ce9958bc10b477330588c78daa254a6/tetris.py
     refactoring: get rid of unnecessary code (no need for _check_high_score)
+    Link to Github with refactoring: https://github.com/brycebien/ase420TeamB/blob/fc7f18fad6a769b26e6d9ab3640645e9785826b7/tetris.py
+
+Code Smell: Magic number (Bryce)
+    Detected: 12/2/2023
+    Lines: 28-29,34
+    Link to Github with Code Smell: https://github.com/brycebien/ase420TeamB/blob/fc7f18fad6a769b26e6d9ab3640645e9785826b7/tetris.py
+    refactoring: declare a constant for the magic number

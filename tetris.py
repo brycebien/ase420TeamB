@@ -18,6 +18,7 @@ class LockedColor:
         self.lockedColor = color
 
 class DetermineNextShape:
+    MAX_FIGURE_INDEX = len(Figures) - 1
     def __init__(self):
         self.next_shape = None
         self.current_shape = None
@@ -25,13 +26,13 @@ class DetermineNextShape:
     
     def determineNext(self):
         if not self.has_been_set:
-            self.current_shape = random.randint(0, len(Figures) - 1)
-            self.next_shape = random.randint(0, len(Figures) - 1)
+            self.current_shape = random.randint(0, self.MAX_FIGURE_INDEX)
+            self.next_shape = random.randint(0, self.MAX_FIGURE_INDEX)
             self.has_been_set = True
             return self.current_shape
         else:
             self.current_shape = self.next_shape
-            self.next_shape = random.randint(0, len(Figures) - 1)
+            self.next_shape = random.randint(0, self.MAX_FIGURE_INDEX)
             return self.current_shape
 
 class Tetromino:
