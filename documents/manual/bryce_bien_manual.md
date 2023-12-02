@@ -29,7 +29,7 @@ Determine and show next piece is designted to enhance your strategic planning by
 
 The High Score feature adds a competitive element to the game, allowing you to challenge yourself to beat your own records. This enhances the overall experience of the game and makes it more fun to play.
 
-## How to use this feature
+### How to use this feature
 
 * As you play Tetris, your score will increase based on your achievements, such as completing lines and obtaining "tets."
 * The High Score will be displayed under the score on the screen. This represents your all-time highest score across multiple game sessions.
