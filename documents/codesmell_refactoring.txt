@@ -10,3 +10,4 @@ Code Smell: Magic number (Bryce)
     Lines: 28-29,34
     Link to Github with Code Smell: https://github.com/brycebien/ase420TeamB/blob/fc7f18fad6a769b26e6d9ab3640645e9785826b7/tetris.py
     refactoring: declare a constant for the magic number
+    Link to Github with refactoring: https://github.com/brycebien/ase420TeamB/blob/4a3a23749d358641b21206fa3e33e49b98c9ccdf/tetris.py
