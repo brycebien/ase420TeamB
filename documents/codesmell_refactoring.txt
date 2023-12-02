@@ -1,0 +1,5 @@
+Code Smell: unnecessary Code
+    Detected: 12/2/2023
+    Lines: 158-162
+    Link to Github with Code Smell: https://github.com/brycebien/ase420TeamB/blob/ec9822580ce9958bc10b477330588c78daa254a6/tetris.py
+    refactoring: get rid of unnecessary code (no need for _check_high_score)

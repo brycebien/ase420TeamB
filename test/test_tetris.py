@@ -46,9 +46,9 @@ def test_determine_next_subsequent_calls():
 
 #test HighScore
 def test_high_score_initialization():
-    high_score_instance = HighScore()
-    assert high_score_instance.score == 0
-    assert high_score_instance.high_score == 0
+    highscore_instance = HighScore()
+    assert highscore_instance.score == 0
+    assert highscore_instance.high_score == 0
 
 def test_highscore_update_score():
     highscore_instance = HighScore()
@@ -56,20 +56,12 @@ def test_highscore_update_score():
     assert highscore_instance.score == 10
     assert highscore_instance.high_score == 10
 
-def test_highscore_check_highscore():
-    highscore_instance = HighScore()
-    highscore_instance.high_score = 15
-    highscore_instance.update_score(20)
-    assert highscore_instance.score == 20
-    assert highscore_instance.high_score == 20
-
 def test_highscore_write_to_file():
     highscore_instance = HighScore()
     highscore_instance.update_score(25)
-    highscore_instance._check_highscore()
     assert highscore_instance.high_score == 25
 
     #reset high score file to 0 after testing
     highscore_instance.score = 0
     highscore_instance.high_score = -1
-    highscore_instance._check_highscore()
+    highscore_instance.update_score(0)

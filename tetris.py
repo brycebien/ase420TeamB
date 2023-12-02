@@ -154,16 +154,12 @@ class HighScore:
                 file.write('0')
                 self.high_score = 0
 
-
-    def _check_highscore(self):
+    def update_score(self, amnt):
+        self.score += amnt
         if self.score > self.high_score:
             self.high_score = self.score
             with open ('highscore.txt', 'w') as file:
                 file.write(str(self.high_score))
-
-    def update_score(self, amnt):
-        self.score += amnt
-        self._check_highscore()
     
 class TetrisGame:
     def __init__(self, screen, start_x, start_y, square_size, height, width):
