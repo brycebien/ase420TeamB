@@ -13,7 +13,7 @@ class Board:
 
         for i in range(self.height - 1, -1, -1):
             if all(self.field[i]):
-                rows_to_remove.append(i)
+                rows_to_remove.insert(0, i)
 
         for row in rows_to_remove:
             del self.field[row]
