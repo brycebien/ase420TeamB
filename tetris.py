@@ -232,8 +232,8 @@ class TetrisGame:
                     screen,
                     theme[i],
                     (
-                        WIDTH // 2 - 3 * BUTTON_WIDTH // 4 + i * (BUTTON_WIDTH // 6),
-                        HEIGHT // 2 + BUTTON_HEIGHT + BUTTON_MARGIN,
+                        WIDTH // 2 - 2 * BUTTON_WIDTH // 4 + i * (BUTTON_WIDTH // 6),
+                        len(THEME_BUTTONS) * (BUTTON_HEIGHT + BUTTON_MARGIN) + BUTTON_MARGIN,
                         BUTTON_WIDTH // 6,
                         BUTTON_HEIGHT,
                     ),
