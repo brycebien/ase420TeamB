@@ -1,1 +1,2 @@
 Observer (line_manager)
+Singleton (ThemeSelector)
