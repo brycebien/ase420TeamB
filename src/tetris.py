@@ -30,7 +30,7 @@ class TetrisGame:
         self.screen.fill(BasicColors.WHITE.value)
         pygame.display.set_caption("Instructions")
 
-        instructions = ["Use the left and right arrow keys to move the tetromino.", "Press the up arrow key to rotate the tetromino.", "Press the spacebar to drop the tetromino.", "Score points by clearing lines by filling in all the squares in a row.", "Points are based on how many lines are cleared at a time", "Press the \"Q\" key to quit the game."]
+        instructions = ["Use the left and right arrow keys to move the tetromino.", "Press the up arrow key to rotate the tetromino.", "Press the spacebar to drop the tetromino.", "Score points by clearing lines by filling in all the squares in a row.", "Points are based on how many lines are cleared at a time", "Press the \"Q\" key to quit the game.", "Press \"C\" to continue."]
 
         font1 = pygame.font.SysFont('trebuchetms', 65, True, False)
         text1 = font1.render("Tetris", True, (0, 255, 0))
@@ -46,9 +46,6 @@ class TetrisGame:
                 display_text = font.render(line, True, BasicColors.BLACK.value)
                 self.screen.blit(display_text, [20, text_y_coord])
                 text_y_coord += 35
-
-        continue_text = font.render("Press \"C\" to continue.", True, BasicColors.BLACK.value)
-        self.screen.blit(continue_text, [20, text_y_coord + 60])
 
         terminator = True
         while terminator:
@@ -173,8 +170,7 @@ class TetrisGame:
                     if event.key == pygame.K_SPACE:
                         Move.go_space(self.tetromino, self.board)
                     if event.key == pygame.K_q:
-                        if self.state == "gameover":
-                            done = True
+                        done = True
                     if event.key == pygame.K_DOWN:
                         pressing_down = True
 
@@ -194,10 +190,6 @@ class TetrisGame:
             self.screen.blit(high_score, [0, 25])
 
             if self.state == "gameover":
-                text_game_over = self.font1.render("Game Over", True, (255, 125, 0))
-                text_game_over1 = self.font1.render("Enter q to Quit", True, (255, 215, 0))
-                self.screen.blit(text_game_over, [20, 200])
-                self.screen.blit(text_game_over1, [25, 265])
                 pygame.mixer.music.stop()
                 break
 
