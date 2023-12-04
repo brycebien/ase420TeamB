@@ -1,4 +1,6 @@
 import pygame
+import sys
+sys.path.append('src')
 from tetris import TetrisGame
 
 if __name__ == "__main__":

@@ -1,4 +1,6 @@
 import random
+import sys
+sys.path.append('src')
 from locked_color import LockedColor
 from next_shape import NextShape
 from figures import Figures

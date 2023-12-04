@@ -1,3 +1,5 @@
+import sys
+sys.path.append('src')
 from themes import color_themes
 
 class ThemeSelector:

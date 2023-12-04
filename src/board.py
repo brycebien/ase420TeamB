@@ -1,3 +1,5 @@
+import sys
+sys.path.append('src')
 from event_manager import EventManager
 
 class Board:

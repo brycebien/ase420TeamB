@@ -1,3 +1,5 @@
+import sys
+sys.path.append('src')
 from sound import SoundPlayer
 from figures import Figures
 

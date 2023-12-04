@@ -1,5 +1,7 @@
 import pygame
 import textwrap
+import sys
+sys.path.append('src')
 from sound import SoundPlayer
 from theme_selector import ThemeSelector
 from colors import BasicColors

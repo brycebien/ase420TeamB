@@ -1,4 +1,6 @@
 import pygame
+import sys
+sys.path.append('src')
 from theme_selector import ThemeSelector
 from colors import BasicColors
 from figures import Figures
