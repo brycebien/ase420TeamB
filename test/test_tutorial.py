@@ -1,5 +1,7 @@
 import pytest
 import pygame
+from pygame.locals import KEYDOWN, K_c
+from unittest.mock import patch, Mock
 import sys
 sys.path.append('src')
 from tetris import TetrisGame
@@ -18,5 +20,11 @@ def tetris_game():
     yield game
     pygame.quit()
 
-def test_show_instructions_human_input(tetris_game):
+def test_show_instructions(tetris_game):
     tetris_game.show_instructions()
+
+def test_show_instructions_advance_with_c_key(tetris_game):
+    with patch("pygame.event.get") as mock_get_event:
+        mock_get_event.return_value = [pygame.event.Event(KEYDOWN, {"key": K_c})]
+
+        tetris_game.show_instructions()
